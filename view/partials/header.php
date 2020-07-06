@@ -49,7 +49,7 @@
             <div id="menu">
                 <ul class="list-unstyled components">
                     <li class=""><a href="?page=index"><i class="fas fa-user-circle"></i>  <span>Información general</span></a></li>
-                    <?php if (isset($_SESSION['rol_user']) && ($_SESSION['rol_user'] == "4" || $_SESSION['rol_user'] == "6" || $_SESSION['rol_user'] == "7")) { ?>
+                    <?php if (isset($_SESSION['usr_tipo']) && ($_SESSION['usr_tipo'] == "monitor" || $_SESSION['usr_tipo'] == "admin" || $_SESSION['usr_tipo'] == "secretaria" || $_SESSION['usr_tipo'] == "jefatura")) { ?>
                         <li class=""><a href="?page=usuarios"><i class="fas fa-users"></i>  <span>Usuarios</span></a></li>
                         <li class=""><a href="?page=secretaria"><i class="fas fa-calculator"></i>  <span>Secretaria</span></a></li>
                         <li class=""><a href="?page=fichas_medicas"><i class="fas fa-medkit"></i>  <span>Fichas Médicas</span></a></li>
@@ -60,7 +60,7 @@
             </div>
             <ul class="list-unstyled CTAs">
                 <?php if (isset($_SESSION['usr_id'])) { ?>
-                    <li>Logeado como: <br><b><?php echo $_SESSION['usr_name']; ?></b></li>
+                    <li>Logeado como: <br><b><?php echo $_SESSION['usr_nombre'].' '. $_SESSION['usr_apellidos']; ?></b></li>
                     <li><a href="scripts/logout.php" class="article">Cerrar sesión</a></li>
                 <?php } ?>
             </ul>
