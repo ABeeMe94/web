@@ -10,16 +10,42 @@ if(isset($_SESSION['usr_id'])) {
 if (isset($_REQUEST['login'])) {
     $usuario = mysqli_real_escape_string($con, $_REQUEST['usuario']);
     $password = mysqli_real_escape_string($con, $_REQUEST['password']);
-    $result = mysqli_query($con, "SELECT * FROM usuario WHERE usuario = '".$usuario."' and password = '".$password."';");
+    $datos_usuario = mysqli_query($con, "SELECT * FROM usuario WHERE usuario = '".$usuario."' and password = '".$password."';");
     //Comprobación inicio de sesión
-    if ($row = mysqli_fetch_array($result)) {
+    if ($row = mysqli_fetch_array($datos_usuario)) {
         if($row['estado_activo']==1){
-            $_SESSION['usr_id'] = $row['id_usuario'];
-            $_SESSION['usr_name'] = $row['nombre']." ".$row['apellidos'];
+            $_SESSION['usr_id'] = $row['id'];
+            echo $_SESSION['usr_id'];
+            $_SESSION['usr_nombre'] = $row['nombre'];
+            $_SESSION['usr_apellidos'] = $row['apellidos'];
+            $_SESSION['usr_dni'] = $row['dni'];
+            $_SESSION['usr_fecha'] = $row['fecha_nacimiento'];
+            $_SESSION['usr_usuario'] = $row['usuario'];
+            $_SESSION['usr_url_foto'] = $row['url_foto'];
 
-            $user_rol = mysqli_query($con, "SELECT * FROM usuario_sector WHERE id_usuario = '".$_SESSION['usr_id']."';");
-            $row2 = mysqli_fetch_array($user_rol);
-            $_SESSION['rol_user'] = $row2['id_tipo'];
+            $mes_actual = date("n");
+            $ano_actual = date("Y");
+            $ano_anterior = $ano_actual-1;
+            $ano_proximo = $ano_actual+1;
+
+            if ($mes_actual < 9){
+                $curso_actual = $ano_anterior.'/'.$ano_actual;
+            } else {
+                $curso_actual = $ano_actual.'/'.$ano_proximo;
+            }
+            $sector_tipo_actual = mysqli_query($con, "SELECT *
+                                                            FROM (  SELECT USTU.id_usuario, S.sector, TU.tipo_usuario, USTU.ano
+                                                                    FROM usuario_sector_tipo_usuario USTU
+                                                                    INNER JOIN sector S
+                                                                    ON S.id = USTU.id_sector
+                                                                    INNER JOIN tipo_usuario TU
+                                                                    ON TU.id = USTU.id_tipo_usuario) as X
+                                                            where X.id_usuario = '".$_SESSION['usr_id']."' and X.ano = '".$curso_actual."'
+                                                            order by X.ano;");
+            if ($row = mysqli_fetch_array($sector_tipo_actual)) {
+                $_SESSION['usr_tipo'] = $row['tipo_usuario'];
+                $_SESSION['usr_sector'] = $row['sector'];
+            }
 
             header("Location: index.php");
         }else
