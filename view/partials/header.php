@@ -60,7 +60,7 @@
             </div>
             <ul class="list-unstyled CTAs">
                 <?php if (isset($_SESSION['usr_id'])) { ?>
-                    <li>Logeado como: <br><b><?php echo $_SESSION['usr_nombre'].' '. $_SESSION['usr_apellidos']; ?></b></li>
+                    <li>Logeado como: <br><b><?php echo $_SESSION['usr_nombre'].' '. $_SESSION['usr_apellidos']; ?></b></li><br>
                     <li><a href="scripts/logout.php" class="article">Cerrar sesión</a></li>
                 <?php } ?>
             </ul>

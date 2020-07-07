@@ -198,6 +198,15 @@ a.article:hover {
     color: #fff !important;
 }
 
+.img-container{
+    width:100%;
+    overflow:hidden;
+}
+.img-container img{
+    width:100%;
+    height:auto
+}
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */

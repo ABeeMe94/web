@@ -3,10 +3,14 @@
 
 <div class="container">
     <div class="jumbotron text-center">
-            <h1>
-                USUARIOS
+        <div class="row">
+            <div class="col-11">
+                <h1>USUARIOS</h1>
+            </div>
+            <div class="col-1">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus-circle"></i></button>
-            </h1>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-12 col-xl-12">
@@ -26,7 +30,7 @@
                         <tbody>
                         <?php while($row= mysqli_fetch_array($consultaUsuarios)){ ?>
                             <tr>
-                                <td><?php echo $row['id_usuario'] ?></td>
+                                <td><?php echo $row['id'] ?></td>
                                 <td><?php echo $row['dni'] ?></td>
                                 <td><?php echo $row['nombre'] ?></td>
                                 <td><?php echo $row['apellidos'] ?></td>

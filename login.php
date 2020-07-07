@@ -1,6 +1,6 @@
 <?php
+//Incluye conexion bbdd
 include_once './scripts/conexion.php';
-
 session_start();
 //Si existe sesión, se redirecciona
 if(isset($_SESSION['usr_id'])) {
@@ -10,6 +10,18 @@ if(isset($_SESSION['usr_id'])) {
 if (isset($_REQUEST['login'])) {
     $usuario = mysqli_real_escape_string($con, $_REQUEST['usuario']);
     $password = mysqli_real_escape_string($con, $_REQUEST['password']);
+//Sacar el curso actual en el que se está
+    $mes_actual = date("n");
+    $ano_actual = date("Y");
+    $ano_anterior = $ano_actual-1;
+    $ano_proximo = $ano_actual+1;
+    if ($mes_actual < 9){
+        $curso_actual = $ano_anterior.'/'.$ano_actual;
+    } else {
+        $curso_actual = $ano_actual.'/'.$ano_proximo;
+    }
+    $_SESSION['ano_actual'] = $curso_actual;
+//-------------------------------------------------USUARIO----------------------------------------------------------------
     $datos_usuario = mysqli_query($con, "SELECT * FROM usuario WHERE usuario = '".$usuario."' and password = '".$password."';");
     //Comprobación inicio de sesión
     if ($row = mysqli_fetch_array($datos_usuario)) {
@@ -23,16 +35,7 @@ if (isset($_REQUEST['login'])) {
             $_SESSION['usr_usuario'] = $row['usuario'];
             $_SESSION['usr_url_foto'] = $row['url_foto'];
 
-            $mes_actual = date("n");
-            $ano_actual = date("Y");
-            $ano_anterior = $ano_actual-1;
-            $ano_proximo = $ano_actual+1;
-
-            if ($mes_actual < 9){
-                $curso_actual = $ano_anterior.'/'.$ano_actual;
-            } else {
-                $curso_actual = $ano_actual.'/'.$ano_proximo;
-            }
+//-------------------------------------------------SECTOR y TIPO USUARIO--------------------------------------------------
             $sector_tipo_actual = mysqli_query($con, "SELECT *
                                                             FROM (  SELECT USTU.id_usuario, S.sector, TU.tipo_usuario, USTU.ano
                                                                     FROM usuario_sector_tipo_usuario USTU
@@ -45,8 +48,36 @@ if (isset($_REQUEST['login'])) {
             if ($row = mysqli_fetch_array($sector_tipo_actual)) {
                 $_SESSION['usr_tipo'] = $row['tipo_usuario'];
                 $_SESSION['usr_sector'] = $row['sector'];
+            } else {
+                $_SESSION['usr_tipo'] = '';
+                $_SESSION['usr_sector'] = '';
             }
-
+//-------------------------------------------------ENFERMEDADES-----------------------------------------------------------
+            if ($_SESSION['usr_tipo'] == 'nino' || $_SESSION['usr_tipo'] == 'monitor') {
+                $enfermedades = mysqli_query($con, "SELECT nombre
+                                                            from (SELECT U.id, E.nombre 
+                                                                    FROM usuario U
+                                                                    INNER JOIN usuario_enfermedad UE ON UE.id_usuario = U.id 
+                                                                    INNER JOIN enfermedad E ON E.id = UE.id_enfermedad) as E 
+                                                            where E.id = '" . $_SESSION['usr_id'] . "'");
+                $enfermedadesArray = array();
+                while ($enfermedad = mysqli_fetch_array($enfermedades)) {
+                    array_push($enfermedadesArray, $enfermedad['nombre']);
+                }
+                $_SESSION['usr_enfermedades'] = $enfermedadesArray;
+            }
+//-------------------------------------------------DATOS------------------------------------------------------------------
+            $datos = mysqli_query($con, "SELECT tipo_dato, dato 
+                                                from(SELECT D.id_usuario ,TD.tipo_dato, D.dato
+                                                        FROM datos D 
+                                                        INNER JOIN tipo_dato TD ON TD.id = D.id_tipo_dato) as X 
+                                                where X.id_usuario = '".$_SESSION['usr_id']."'");
+            $datosArray = array();
+            while ($dato = mysqli_fetch_array($datos)){
+                array_push($datosArray, $dato);
+            }
+            $_SESSION['usr_datos'] = $datosArray;
+//------------------------------------------------------------------------------------------------------------------------
             header("Location: index.php");
         }else
             //Error cuenta desactivada estado=0
