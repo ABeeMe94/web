@@ -36,11 +36,7 @@
                             <td><?php echo $_SESSION['usr_fecha'] ?></td>
                         </tr>
                         <?php } ?>
-                        <tr>
-                            <td><h6>USUARIO</h6></td>
-                            <td><?php echo $_SESSION['usr_usuario'] ?></td>
-                        </tr>
-                        <?php if($_SESSION['usr_tipo'] !== 'padre' && $_SESSION['usr_tipo'] !== 'madre' && $_SESSION['usr_tipo'] !== 'tutor') { ?>
+                        <?php if($_SESSION['usr_tipo'] !== 'padre' || $_SESSION['usr_tipo'] !== 'madre' || $_SESSION['usr_tipo'] !== 'tutor' || $_SESSION['usr_tipo'] !== 'jefatura' || $_SESSION['usr_tipo'] !== 'admin' || $_SESSION['usr_tipo'] !== 'secretaria') { ?>
                         <tr>
                             <td><h6>SECTOR</h6></td>
                             <td><?php echo $_SESSION['usr_sector'] ?></td>
@@ -54,7 +50,7 @@
                                 <?php }?>
                             </td>
                         </tr>
-                        <?php if($_SESSION['usr_tipo'] !== 'padre' && $_SESSION['usr_tipo'] !== 'madre' && $_SESSION['usr_tipo'] !== 'tutor') { ?>
+                        <?php if($_SESSION['usr_tipo'] == 'nino' || $_SESSION['usr_tipo'] == 'monitor') { ?>
                         <tr>
                             <td><h6>ENFERMEDADES</h6></td>
                             <td>

@@ -152,9 +152,9 @@ flex: 1;
 
 --loginLabelBackgroundColor: #363b41;
 
---loginSubmitBackgroundColor: #ea4c88;
+--loginSubmitBackgroundColor: #ff4a4a;
 --loginSubmitColor: #eee;
---loginSubmitHoverBackgroundColor: #d44179;
+--loginSubmitHoverBackgroundColor: #ff6b4a;
 }
 
 .login {

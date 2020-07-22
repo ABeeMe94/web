@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>GestiApp</title>
+	<title>GestCo</title>
     <!--Bootstrap-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!--Mi css-->
@@ -43,7 +43,7 @@
     <div class="wrapper">
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h3 class="tit_app">GestiApp</h3>
+                <img src="public/img-contacto/gestco.png">
                 <strong>GA</strong>
             </div>
             <div id="menu">
@@ -51,9 +51,11 @@
                     <li class=""><a href="?page=index"><i class="fas fa-user-circle"></i>  <span>Información general</span></a></li>
                     <?php if (isset($_SESSION['usr_tipo']) && ($_SESSION['usr_tipo'] == "monitor" || $_SESSION['usr_tipo'] == "admin" || $_SESSION['usr_tipo'] == "secretaria" || $_SESSION['usr_tipo'] == "jefatura")) { ?>
                         <li class=""><a href="?page=usuarios"><i class="fas fa-users"></i>  <span>Usuarios</span></a></li>
-                        <li class=""><a href="?page=secretaria"><i class="fas fa-calculator"></i>  <span>Secretaria</span></a></li>
                         <li class=""><a href="?page=fichas_medicas"><i class="fas fa-medkit"></i>  <span>Fichas Médicas</span></a></li>
                         <li class=""><a href="?page=proveedores"><i class="fas fa-address-book"></i>  <span>Proveedores</span></a></li>
+                    <?php } ?>
+                    <?php if (isset($_SESSION['usr_tipo']) && ($_SESSION['usr_tipo'] == "secretaria" || $_SESSION['usr_tipo'] == "admin" || $_SESSION['usr_tipo'] == "jefatura")) { ?>
+                        <li class=""><a href="?page=secretaria"><i class="fas fa-calculator"></i>  <span>Secretaria</span></a></li>
                     <?php } ?>
                     <li class=""><a href="?page=calendario"><i class="fas fa-calendar"></i>  <span>Calendario</span></a></li>
                 </ul>

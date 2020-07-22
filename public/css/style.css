@@ -120,7 +120,7 @@ span {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #e83e8c;
+    background: #ffcaa4;
 }
 
 #sidebar .sidebar-header strong {
@@ -151,7 +151,7 @@ span {
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
     color: #fff;
-    background: #ea4c88;
+    background: #ff4a4a;
 }
 #sidebar .sidebar-header h3 {
 
@@ -172,7 +172,7 @@ a[data-toggle="collapse"] {
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #efa2a9;
+    background: #ff6b4a;
 }
 
 ul.CTAs {
@@ -194,7 +194,7 @@ a.download {
 
 a.article,
 a.article:hover {
-    background: #efa2a9 !important;
+    background: #ff6b4a !important;
     color: #fff !important;
 }
 

@@ -22,7 +22,7 @@ if (isset($_REQUEST['login'])) {
     }
     $_SESSION['ano_actual'] = $curso_actual;
 //-------------------------------------------------USUARIO----------------------------------------------------------------
-    $datos_usuario = mysqli_query($con, "SELECT * FROM usuario WHERE usuario = '".$usuario."' and password = '".$password."';");
+    $datos_usuario = mysqli_query($con, "SELECT * FROM usuario WHERE dni = '".$usuario."' and password = '".$password."';");
     //Comprobación inicio de sesión
     if ($row = mysqli_fetch_array($datos_usuario)) {
         if($row['estado_activo']==1){
@@ -32,7 +32,6 @@ if (isset($_REQUEST['login'])) {
             $_SESSION['usr_apellidos'] = $row['apellidos'];
             $_SESSION['usr_dni'] = $row['dni'];
             $_SESSION['usr_fecha'] = $row['fecha_nacimiento'];
-            $_SESSION['usr_usuario'] = $row['usuario'];
             $_SESSION['usr_url_foto'] = $row['url_foto'];
 
 //-------------------------------------------------SECTOR y TIPO USUARIO--------------------------------------------------
@@ -91,14 +90,14 @@ if (isset($_REQUEST['login'])) {
 
 <html>
     <head>
-        <title>GestiApp</title>
+        <title>GestCo</title>
         <link rel="stylesheet" type="text/css" href="public/css/login.css" media="screen" />
-        <link rel="stylesheet" href="css/bootstrap.min.css" >
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css" >
-        <script src="js/bootstrap.min.js" ></script>
+        <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" >
+        <!--link rel="stylesheet" href="css/bootstrap-theme.min.css" -->
+        <script src="js/bootstrap/bootstrap.min.js" ></script>
     </head>
     <body class="align">
-        <h1 class="titulo_login">GestiApp</h1>
+        <img src="public/img-contacto/gestco.png"><br>
         <div class="grid">
             <form action="<?php $_SERVER['PHP_SELF']; ?>" method="POST" class="form login">
                 <div class="form__field">

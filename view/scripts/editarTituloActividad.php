@@ -36,7 +36,7 @@ if (isset($_REQUEST['delete']) && isset($_REQUEST['id'])){
 	}
 
 }
-header('Location: ../calendar.php');
+header('Location: '.$_SERVER['HTTP_REFERER']);
 
 	
 ?>
