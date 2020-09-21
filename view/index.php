@@ -7,11 +7,11 @@
             <div class="col-4">
                 <?php if($_SESSION['usr_url_foto']){ ?>
                     <div class="img-container">
-                        <img class="img-fluid rounded-circle" src="public/img-contacto/<?php echo $_SESSION['usr_url_foto'] ?>">
+                        <img class="img-fluid rounded-circle" style="border:5px solid black;" src="public/img-contacto/<?php echo $_SESSION['usr_url_foto'] ?>">
                     </div>
                 <?php } else { ?>
                     <div class="img-container">
-                        <img class="img-fluid rounded-circle" src="public/img-contacto/imagen.jpg">
+                        <img class="img-fluid rounded-circle" style="border:5px solid black;" src="public/img-contacto/imagen.png">
                     </div>
                 <?php } ?>
             </div>
@@ -30,13 +30,13 @@
                             <td><h6>DNI</h6></td>
                             <td><?php echo $_SESSION['usr_dni'] ?></td>
                         </tr>
-                        <?php if($_SESSION['usr_tipo'] !== 'padre' && $_SESSION['usr_tipo'] !== 'madre' && $_SESSION['usr_tipo'] !== 'tutor') { ?>
+                        <?php if($_SESSION['usr_id_tipo'] == '1' || $_SESSION['usr_id_tipo'] == '2') { ?>
                         <tr>
                             <td><h6>FECHA DE NACIMIENTO</h6></td>
                             <td><?php echo $_SESSION['usr_fecha'] ?></td>
                         </tr>
                         <?php } ?>
-                        <?php if($_SESSION['usr_tipo'] !== 'padre' || $_SESSION['usr_tipo'] !== 'madre' || $_SESSION['usr_tipo'] !== 'tutor' || $_SESSION['usr_tipo'] !== 'jefatura' || $_SESSION['usr_tipo'] !== 'admin' || $_SESSION['usr_tipo'] !== 'secretaria') { ?>
+                        <?php if($_SESSION['usr_id_tipo'] == '1' || $_SESSION['usr_id_tipo'] == '2') { ?>
                         <tr>
                             <td><h6>SECTOR</h6></td>
                             <td><?php echo $_SESSION['usr_sector'] ?></td>
@@ -50,7 +50,7 @@
                                 <?php }?>
                             </td>
                         </tr>
-                        <?php if($_SESSION['usr_tipo'] == 'nino' || $_SESSION['usr_tipo'] == 'monitor') { ?>
+                        <?php if($_SESSION['usr_id_tipo'] == '1' || $_SESSION['usr_id_tipo'] == '2') { ?>
                         <tr>
                             <td><h6>ENFERMEDADES</h6></td>
                             <td>
@@ -65,14 +65,12 @@
                             </td>
                         </tr>
                         <?php } ?>
-                        <?php if($_SESSION['usr_tipo'] == 'nino' || $_SESSION['usr_tipo'] == 'monitor' || $_SESSION['usr_tipo'] == ''){ ?>
+                        <?php if($_SESSION['usr_id_tipo'] == '1' || $_SESSION['usr_id_tipo'] == '2' || $_SESSION['usr_id_tipo'] == ''){ ?>
                         <tr>
                             <td><h6>PADRE/MADRE/TUTOR</h6></td>
                             <td><?php $ids_padres = mysqli_query($con, "SELECT id_usuario_padre FROM usuario_usuario WHERE id_usuario_nino = '".$_SESSION['usr_id']."';");
                                 while ($padre = mysqli_fetch_array($ids_padres)){
-                                    $info_padre = mysqli_query($con, "SELECT *
-                                                                            FROM usuario
-                                                                            WHERE id = '".$padre['id_usuario_padre']."';");
+                                    $info_padre = mysqli_query($con, "SELECT * FROM usuario WHERE id = '".$padre['id_usuario_padre']."';");
                                     while ($row = mysqli_fetch_array($info_padre)){ ?>
                                         <ul class="list-unstyled">
                                             <li><b><?php echo $row['nombre'].' '.$row['apellidos']; ?></b>
@@ -81,12 +79,7 @@
                                                         <li>DNI:  <?php echo $row['dni']; ?></li>
                                                     <?php } ?>
                                                     <?php
-                                                    $datosPadre = mysqli_query($con, "SELECT tipo_dato, dato 
-                                                                                            from(SELECT D.id_usuario ,TD.tipo_dato, D.dato
-                                                                                                    FROM datos D 
-                                                                                                    INNER JOIN tipo_dato TD ON TD.id = D.id_tipo_dato) as X 
-                                                                                            where X.id_usuario = '".$row['id']."'");
-
+                                                    $datosPadre = mysqli_query($con, "SELECT tipo_dato, dato from(SELECT D.id_usuario ,TD.tipo_dato, D.dato FROM datos D INNER JOIN tipo_dato TD ON TD.id = D.id_tipo_dato) as X where X.id_usuario = '".$row['id']."'");
                                                     while ($dato = mysqli_fetch_array($datosPadre)){ ?>
                                                         <li> <?php echo $dato['tipo_dato']?>: <?php echo $dato['dato'] ?> </li>
                                                     <?php }?>
@@ -100,11 +93,7 @@
                         <tr>
                             <td><h6>HERMANO/A/OS/AS</h6></td>
                             <td><?php $ids_padres2 = mysqli_query($con, "SELECT id_usuario_padre FROM usuario_usuario WHERE id_usuario_nino = '".$_SESSION['usr_id']."';");
-                                $query = "select distinct U.* 
-                                            from usuario U 
-                                            inner join usuario_usuario UU
-                                            on U.id = UU.id_usuario_nino
-                                            where U.id != '".$_SESSION['usr_id']."' and (";
+                                $query = "select distinct U.* from usuario U inner join usuario_usuario UU on U.id = UU.id_usuario_nino where U.id != '".$_SESSION['usr_id']."' and (";
                                 $first = true;
                                 while ($padre = mysqli_fetch_array($ids_padres2)){
                                     $id_padre = $padre['id_usuario_padre'];
@@ -126,30 +115,17 @@
                                                         <li>DNI: <?php echo $hermano['dni']; ?></li>
                                                     <?php } ?>
                                                     <?php
-                                                    $datosHermano = mysqli_query($con, "SELECT tipo_dato, dato 
-                                                                                                            from(SELECT D.id_usuario ,TD.tipo_dato, D.dato
-                                                                                                                    FROM datos D 
-                                                                                                                    INNER JOIN tipo_dato TD ON TD.id = D.id_tipo_dato) as X 
-                                                                                                            where X.id_usuario = '" . $hermano['id'] . "'");
+                                                    $datosHermano = mysqli_query($con, "SELECT tipo_dato, dato from(SELECT D.id_usuario ,TD.tipo_dato, D.dato FROM datos D INNER JOIN tipo_dato TD ON TD.id = D.id_tipo_dato) as X where X.id_usuario = '" . $hermano['id'] . "'");
 
                                                     while ($dato = mysqli_fetch_array($datosHermano)) { ?>
-                                                        <li> <?php echo $dato['tipo_dato'] ?>
-                                                            : <?php echo $dato['dato'] ?> </li>
+                                                        <li> <?php echo $dato['tipo_dato'] ?>: <?php echo $dato['dato'] ?> </li>
                                                     <?php }
-                                                    $sector_hermano = mysqli_query($con, "SELECT *
-                                                                                                FROM (  SELECT USTU.id_usuario, S.sector, TU.tipo_usuario, USTU.ano
-                                                                                                        FROM usuario_sector_tipo_usuario USTU
-                                                                                                        INNER JOIN sector S
-                                                                                                        ON S.id = USTU.id_sector
-                                                                                                        INNER JOIN tipo_usuario TU
-                                                                                                        ON TU.id = USTU.id_tipo_usuario) as X
-                                                                                                where X.id_usuario = '" . $hermano['id'] . "' and X.ano = '" . $_SESSION['ano_actual'] . "'
-                                                                                                order by X.ano;");
+                                                    $sector_hermano = mysqli_query($con, "SELECT * FROM (SELECT USTU.id_usuario, S.sector, TU.tipo_usuario, USTU.ano FROM usuario_sector_tipo_usuario USTU INNER JOIN sector S ON S.id = USTU.id_sector INNER JOIN tipo_usuario TU ON TU.id = USTU.id_tipo_usuario) as X where X.id_usuario = '" . $hermano['id'] . "' and X.ano = '" . $_SESSION['ano_actual'] . "' order by X.ano;");
                                                     if ($row = mysqli_fetch_array($sector_hermano)) {
                                                         if ($row['tipo_usuario'] == 'monitor') { ?>
-                                                            <li><?php echo $row['sector'] . ' (monitor)' ?></li>
+                                                            <li>Sector: <?php echo $row['sector'] . ' (monitor)' ?></li>
                                                         <?php } else { ?>
-                                                            <li><?php echo $row['sector'] ?></li>
+                                                            <li>Sector: <?php echo $row['sector'] ?></li>
                                                         <?php } ?>
                                                     <?php } ?>
                                                 </ul>
@@ -160,14 +136,12 @@
                             </td>
                         </tr>
                     <?php }
-                         if($_SESSION['usr_tipo'] == 'padre' || $_SESSION['usr_tipo'] == 'madre' || $_SESSION['usr_tipo'] == 'tutor'){ ?>
+                         if($_SESSION['usr_id_tipo'] == '3' || $_SESSION['usr_id_tipo'] == '4' || $_SESSION['usr_id_tipo'] == '5'){ ?>
                         <tr>
                             <td><h6>HIJO/S</h6></td>
                             <td><?php $ids_hijos = mysqli_query($con, "SELECT id_usuario_nino FROM usuario_usuario WHERE id_usuario_padre = '".$_SESSION['usr_id']."';");
                                 while ($hijo = mysqli_fetch_array($ids_hijos)){
-                                    $info_hijo = mysqli_query($con, "SELECT *
-                                                                        FROM usuario
-                                                                        WHERE id = '".$hijo['id_usuario_nino']."';");
+                                    $info_hijo = mysqli_query($con, "SELECT * FROM usuario WHERE id = '".$hijo['id_usuario_nino']."';");
                                     while ($row = mysqli_fetch_array($info_hijo)){ ?>
                                         <ul class="list-unstyled">
                                             <li><b><?php echo $row['nombre'].' '.$row['apellidos']; ?></b>
@@ -176,28 +150,16 @@
                                                         <li>DNI:  <?php echo $row['dni']; ?></li>
                                                     <?php } ?>
                                                     <?php
-                                                    $datosHijo = mysqli_query($con, "SELECT tipo_dato, dato 
-                                                                                        from(SELECT D.id_usuario ,TD.tipo_dato, D.dato
-                                                                                                FROM datos D 
-                                                                                                INNER JOIN tipo_dato TD ON TD.id = D.id_tipo_dato) as X 
-                                                                                        where X.id_usuario = '".$row['id']."'");
+                                                    $datosHijo = mysqli_query($con, "SELECT tipo_dato, dato from(SELECT D.id_usuario ,TD.tipo_dato, D.dato FROM datos D INNER JOIN tipo_dato TD ON TD.id = D.id_tipo_dato) as X where X.id_usuario = '".$row['id']."'");
                                                     while ($dato = mysqli_fetch_array($datosHijo)){ ?>
                                                         <li> <?php echo $dato['tipo_dato']?>: <?php echo $dato['dato'] ?> </li>
                                                     <?php }
-                                                    $sector_hijo = mysqli_query($con, "SELECT *
-                                                                                                FROM (  SELECT USTU.id_usuario, S.sector, TU.tipo_usuario, USTU.ano
-                                                                                                        FROM usuario_sector_tipo_usuario USTU
-                                                                                                        INNER JOIN sector S
-                                                                                                        ON S.id = USTU.id_sector
-                                                                                                        INNER JOIN tipo_usuario TU
-                                                                                                        ON TU.id = USTU.id_tipo_usuario) as X
-                                                                                                where X.id_usuario = '".$row['id']."' and X.ano = '".$_SESSION['ano_actual']."'
-                                                                                                order by X.ano;");
+                                                    $sector_hijo = mysqli_query($con, "SELECT * FROM (SELECT USTU.id_usuario, S.sector, TU.tipo_usuario, USTU.ano FROM usuario_sector_tipo_usuario USTU INNER JOIN sector S ON S.id = USTU.id_sector INNER JOIN tipo_usuario TU ON TU.id = USTU.id_tipo_usuario) as X where X.id_usuario = '".$row['id']."' and X.ano = '".$_SESSION['ano_actual']."' order by X.ano;");
                                                     if ($row = mysqli_fetch_array($sector_hijo)) {
                                                         if ($row['tipo_usuario'] == 'monitor') {?>
-                                                            <li><?php echo $row['sector'].' (monitor)' ?></li>
+                                                            <li>Sector: <?php echo $row['sector'].' (monitor)' ?></li>
                                                         <?php } else { ?>
-                                                            <li><?php echo $row['sector'] ?></li>
+                                                            <li>Sector: <?php echo $row['sector'] ?></li>
                                                         <?php } ?>
                                                     <?php }?>
                                                 </ul>

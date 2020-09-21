@@ -1,3 +1,27 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+<script type="application/javascript">
+    $(function(){
+        var $tabla = $('#proveedores');
+        $('#selectTipo').change(function(){
+            var value = $(this).val();
+            if (value){
+                $('tbody tr.' + value, $tabla).show();
+                $('tbody tr:not(.' + value + ')', $tabla).hide();
+            }
+            else{
+                $('tbody tr', $tabla).show();
+            }
+        });
+    });
+    function editarProveedor(idProveedor) {
+        var idProveedor = idProveedor;
+        $.post("view/scripts/editarProveedor.php", {id: idProveedor}, function(datos){
+            $("#resultadoBusquedaProveedor").html(datos);
+        });
+    };
+</script>
+
 <div class="container">
     <div class="jumbotron text-center">
         <div class="col-lg-12 col-xl-12">
@@ -16,21 +40,6 @@
             <?php $consultaProveedores = mysqli_query($con, "SELECT * FROM proveedores WHERE estado_activo = 1"); ?>
             <div class="table-responsive">
                 <div class="jumbotron">
-                    <script type="application/javascript">
-                        $(function(){
-                            var $tabla = $('#proveedores');
-                            $('#selectTipo').change(function(){
-                                var value = $(this).val();
-                                if (value){
-                                    $('tbody tr.' + value, $tabla).show();
-                                    $('tbody tr:not(.' + value + ')', $tabla).hide();
-                                }
-                                else{
-                                    $('tbody tr', $tabla).show();
-                                }
-                            });
-                        });
-                    </script>
                     <div class="text-right">
                         <span>Tipo de proveedor: </span>
                         <select id="selectTipo">
@@ -54,11 +63,7 @@
                         <tbody>
                         <?php while($row2= mysqli_fetch_array($consultaProveedores)) {
                             if ($row2['estado_activo'] == 1) {
-                                $tipo_proveedor = mysqli_query($con, "Select TP.tipo_proveedor 
-                                                                                    from tipo_proveedor TP
-                                                                                    inner join proveedor_tipo_proveedor PTP
-                                                                                    on TP.id = PTP.id_tipo_proveedor
-                                                                                    where PTP.id_proveedor = '" . $row2['id'] . "';");
+                                $tipo_proveedor = mysqli_query($con, "Select TP.tipo_proveedor from tipo_proveedor TP inner join proveedor_tipo_proveedor PTP on TP.id = PTP.id_tipo_proveedor where PTP.id_proveedor = '" . $row2['id'] . "';");
                                 $txt_tipo = "";
                                 $first = true;
                                 while ($tipo = mysqli_fetch_array($tipo_proveedor)) {
@@ -69,37 +74,22 @@
                                         $txt_tipo = $txt_tipo . " " . $tipo['tipo_proveedor'];
                                     }
                                 };
-
-                                $datos_proveedor = mysqli_query($con, "select TP.tipo_dato, DP.dato
-                                                                                            from datos_proveedor DP
-                                                                                            inner join tipo_dato TP
-                                                                                            on TP.id = DP.id_tipo_dato
-                                                                                            where DP.id_proveedor = '" . $row2['id'] . "';");
+                                $datos_proveedor = mysqli_query($con, "select TP.tipo_dato, DP.dato from datos_proveedor DP inner join tipo_dato TP on TP.id = DP.id_tipo_dato where DP.id_proveedor = '" . $row2['id'] . "';");
                                 $datosProveedor ="";
                                 $primero=true;
                                 while ($dato = mysqli_fetch_array($datos_proveedor)) {
                                     if ($primero) {
-                                        $datosProveedor = $dato['tipo_dato'] . ': ' . $dato['dato'];
+                                        $datosProveedor = $dato['tipo_dato'].': '.$dato['dato'];
                                         $primero = false;
                                     } else {
-                                        $datosProveedor = $datosProveedor . ";" . $dato['tipo_dato'] . ': ' . $dato['dato'];
+                                        $datosProveedor = $datosProveedor.";".$dato['tipo_dato'].': '.$dato['dato'];
                                     }
                                 }; ?>
                                 <tr id="<?php echo $row2['id'];?>" class="<?php echo $txt_tipo ?>">
                                     <td><?php echo $row2['nombre'] ?></td>
-                                    <td>
-                                        <?php
-                                            echo str_replace(' ', '<br>', $txt_tipo);
-                                        ?>
-                                    </td>
-                                    <td>
-                                        <?php
-                                            echo str_replace(';', '<br>', $datosProveedor);
-                                         ?>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editarProveedor" onclick="editarProveedor(<?php echo $row2['id'];?>)"><i class="fas fa-edit"></i></button>
-                                    </td>
+                                    <td><?php echo str_replace(' ', '<br>', $txt_tipo); ?></td>
+                                    <td><?php  echo str_replace(';', '<br>', $datosProveedor); ?></td>
+                                    <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editarProveedor" onclick="editarProveedor(<?php echo $row2['id'];?>)"><i class="fas fa-edit"></i></button></td>
                                 </tr>
                         <?php }
                         } ?>
@@ -109,7 +99,6 @@
             </div>
         </div>
     </div>
-
 <!-- ----------------------------- Modal Nuevo ---------------------------------------------- -->
     <div class="modal fade bd-example-modal-lg" id="crearProveedor" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -134,6 +123,7 @@
                                         <tr id="datoOriginal" hidden>
                                             <td>
                                                 <select>
+                                                    <option value=""></option>
                                                     <?php $tiposDatos = mysqli_query($con, "SELECT * FROM tipo_dato");
                                                     while ($tipoDato = mysqli_fetch_array($tiposDatos)){ ?>
                                                         <option value="<?php echo $tipoDato['id']; ?>"><?php echo $tipoDato['tipo_dato']; ?></option>
@@ -151,6 +141,7 @@
                                         <tr>
                                             <td>
                                                 <select name="selectTipoDato[]">
+                                                    <option value=""></option>
                                                     <?php $tiposDatos = mysqli_query($con, "SELECT * FROM tipo_dato");
                                                     while ($tipoDato = mysqli_fetch_array($tiposDatos)){ ?>
                                                         <option value="<?php echo $tipoDato['id']; ?>"><?php echo $tipoDato['tipo_dato']; ?></option>
@@ -202,7 +193,6 @@
             </div>
         </div>
     </div>
-
 <!-- ----------------------------- Modal Editar ---------------------------------------------- -->
     <div class="modal fade bd-example-modal-lg" id="editarProveedor" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -213,10 +203,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form action="view/scripts/actualizarProveedorBD.php" method="post" name="formActualizarProveedor" id="formActualizarProveedor">
-                    </form>
-                </div>
+                <div class="modal-body" id="resultadoBusquedaProveedor"></div>
             </div>
         </div>
     </div>

@@ -14,7 +14,6 @@ if ($count == 1){ ?>
     </script>
 <?php } else {
     $query = "INSERT INTO proveedores (nombre,estado_activo) VALUES ('".$nombre."',1)";
-    echo $query;
     if ($con -> query($query) === TRUE){
         $idProveedorNuevo = mysqli_query($con, "SELECT id FROM proveedores WHERE nombre = '".$nombre."';");
         if($row = mysqli_fetch_array($idProveedorNuevo)){
@@ -34,16 +33,19 @@ if ($count == 1){ ?>
             $tdatos = $_REQUEST['selectTipoDato'];
             $datos = $_REQUEST['dato'];
             $querys = "";
-            for ($i=0; $i<count($tdatos);$i++) {
-                echo '/'.$row['id'].'-------'.$tdatos[$i].'--------'.$datos[$i].'/';
-                $querys = "INSERT INTO datos_proveedor (id_proveedor, id_tipo_dato, dato) VALUES (".$row['id'].",".$tdatos[$i].",'".$datos[$i]."');";
-                if ($con -> query($querys)) {  } else { ?>
-                    <script type="application/javascript">
-                        alert('No se han podido registrar los datos. Revisarlo en la tabla.');
-                    </script>
-                    <?php
+            if (!empty($datos) && is_array($datos)) {
+                for ($i = 0; $i < count($tdatos); $i++) {
+                    echo '/' . $row['id'] . '-------' . $tdatos[$i] . '--------' . $datos[$i] . '/';
+                    $querys = "INSERT INTO datos_proveedor (id_proveedor, id_tipo_dato, dato) VALUES (" . $row['id'] . "," . $tdatos[$i] . ",'" . $datos[$i] . "');";
+                    if ($con->query($querys)) {
+                    } else { ?>
+                        <script type="application/javascript">
+                            alert('No se han podido registrar los datos. Revisarlo en la tabla.');
+                        </script>
+                        <?php
+                    }
                 }
-            }echo $querys;
+            }
         }
     } else { ?>
         <script type="application/javascript">

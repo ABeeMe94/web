@@ -23,6 +23,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <script type="application/javascript">
         /*$(document).ready(function () {
@@ -49,12 +50,12 @@
             <div id="menu">
                 <ul class="list-unstyled components">
                     <li class=""><a href="?page=index"><i class="fas fa-user-circle"></i>  <span>Información general</span></a></li>
-                    <?php if (isset($_SESSION['usr_tipo']) && ($_SESSION['usr_tipo'] == "monitor" || $_SESSION['usr_tipo'] == "admin" || $_SESSION['usr_tipo'] == "secretaria" || $_SESSION['usr_tipo'] == "jefatura")) { ?>
+                    <?php if (isset($_SESSION['usr_id_tipo']) && ($_SESSION['usr_id_tipo'] == "1" || $_SESSION['usr_id_tipo'] == "6" || $_SESSION['usr_id_tipo'] == "7")) { ?>
                         <li class=""><a href="?page=usuarios"><i class="fas fa-users"></i>  <span>Usuarios</span></a></li>
                         <li class=""><a href="?page=fichas_medicas"><i class="fas fa-medkit"></i>  <span>Fichas Médicas</span></a></li>
                         <li class=""><a href="?page=proveedores"><i class="fas fa-address-book"></i>  <span>Proveedores</span></a></li>
                     <?php } ?>
-                    <?php if (isset($_SESSION['usr_tipo']) && ($_SESSION['usr_tipo'] == "secretaria" || $_SESSION['usr_tipo'] == "admin" || $_SESSION['usr_tipo'] == "jefatura")) { ?>
+                    <?php if (isset($_SESSION['usr_tipo']) && ($_SESSION['usr_id_tipo'] == "8" || $_SESSION['usr_id_tipo'] == "6" || $_SESSION['usr_id_tipo'] == "7")) { ?>
                         <li class=""><a href="?page=secretaria"><i class="fas fa-calculator"></i>  <span>Secretaria</span></a></li>
                     <?php } ?>
                     <li class=""><a href="?page=calendario"><i class="fas fa-calendar"></i>  <span>Calendario</span></a></li>

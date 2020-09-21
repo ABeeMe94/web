@@ -21,7 +21,7 @@ if (isset($_REQUEST['delete']) && isset($_REQUEST['id'])){
 	$title = $_REQUEST['title'];
 	$color = $_REQUEST['color'];
 	
-	$sql = "UPDATE actividad SET  title = '$title', color = '$color' WHERE id = $id ";
+	$sql = "UPDATE actividad SET  title = '$title', color = '$color' WHERE id = ".$id.";";
 
 	
 	$query = $con->prepare( $sql );

@@ -1,11 +1,13 @@
 <?php
 //session_start();
 include_once '../../scripts/conexion.php';
-
 $id = $_REQUEST['id'];
+error_log($id);
 
-$query = "UPDATE usuario SET  estado_activo = 0 WHERE id = $id ;";
-$sql = mysqli_query($con, $query);
-if($row = mysqli_fetch_array($sql)){
-    error_log('Usuario deshabilitado');
+$query = "UPDATE usuario SET  estado_activo = 0 WHERE id = ".$id.";";
+
+if($sql = mysqli_query($con, $query)){
+    echo 'Usuario deshabilitado';
+} else {
+    echo 'No se ha podido deshabilitar el usuario.';
 }
