@@ -7,9 +7,12 @@ if($_SESSION['usr_tipo'] != 'admin' && $_SESSION['usr_tipo'] != 'jefatura' && $_
 <script type="application/javascript">
     function borrarActividad(idPago) {
         $.post("view/scripts/borrarPago.php", {id: idPago}, function (dato) {
-            alert(dato);
+            swal({text: dato, type: "success"}).then(function(){
+                    location.reload();
+                }
+            );
         });
-        location.reload();
+
     };
     $(document).ready(function() {
         $('#actualizar').click(function(){
@@ -28,12 +31,12 @@ if($_SESSION['usr_tipo'] != 'admin' && $_SESSION['usr_tipo'] != 'jefatura' && $_
                 seleccionados=selected.split(',');
                 seleccionados.pop();
                 $.post("view/scripts/insertarUsuariosPagados.php",{"arraySeleccionados":seleccionados, "pago":pago},function(respuesta){
-                    alert(respuesta);
+                    swal(respuesta);
                     buscarUsuariosPago(pago, nombrePago, cantidadPago);
                 });
             }
             else{
-                alert('Debes seleccionar al menos una opción.');
+                swal('Debes seleccionar al menos una opción.');
             }
             return false;
         });

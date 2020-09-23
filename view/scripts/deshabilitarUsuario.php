@@ -2,7 +2,6 @@
 //session_start();
 include_once '../../scripts/conexion.php';
 $id = $_REQUEST['id'];
-error_log($id);
 
 $query = "UPDATE usuario SET  estado_activo = 0 WHERE id = ".$id.";";
 

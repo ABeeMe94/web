@@ -49,7 +49,7 @@
             </div>
             <div id="menu">
                 <ul class="list-unstyled components">
-                    <li class=""><a href="?page=index"><i class="fas fa-user-circle"></i>  <span>Información general</span></a></li>
+                    <li class="active"><a href="?page=index"><i class="fas fa-user-circle"></i>  <span>Información general</span></a></li>
                     <?php if (isset($_SESSION['usr_id_tipo']) && ($_SESSION['usr_id_tipo'] == "1" || $_SESSION['usr_id_tipo'] == "6" || $_SESSION['usr_id_tipo'] == "7")) { ?>
                         <li class=""><a href="?page=usuarios"><i class="fas fa-users"></i>  <span>Usuarios</span></a></li>
                         <li class=""><a href="?page=fichas_medicas"><i class="fas fa-medkit"></i>  <span>Fichas Médicas</span></a></li>

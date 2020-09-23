@@ -10,27 +10,61 @@ function deshabilitarUsuario(idUsuario) {
     }).then((willDelete) => {
         if (willDelete) {
             $.post("view/scripts/deshabilitarUsuario.php", {id: idUsuario}, function (dato) {
-                swal(dato, {
-                    icon: "success",
-                });
-                setTimeout(function(){
-                    window.location.reload(1);
-                }, 5000);
+                swal({text: dato, icon: "success", type: "success"}).then(function(){
+                        location.reload();
+                    }
+                );
             });
         } else {
-            swal("No se ha deshabilitado el usuario");
-            setTimeout(function(){
-                window.location.reload(1);
-            }, 5000);
+            swal({text: "No se ha deshabilitado el usuario", icon: "error", type: "success"}).then(function(){
+                    location.reload();
+                }
+            );
         }
     });
 };
+function buscarUsuario() {
+    var dni = $("#dni").val();
+
+    $.post("view/scripts/buscarUsuario.php", {dni: dni}, function(existe){
+        if (existe == '1'){
+            swal({text: "El usuario ya existe y está activado.", icon: "success", type: "success"}).then(function(){
+                    location.reload();
+                }
+            );
+        } else if (existe == '2'){
+            swal({
+                title: "El usuario esta deshabilitado.",
+                text: "¿Desea habilitarlo?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.post("view/scripts/habilitarUsuario.php", {dni: dni}, function (dato2) {
+                            swal({text: dato2, icon: "success", type: "success"}).then(function(){
+                                    location.reload();
+                                }
+                            );
+                        });
+                    } else {
+                        swal({text: "No se ha habilitado el usuario", icon: "error", type: "success"}).then(function(){
+                                location.reload();
+                            }
+                        );
+                    }
+                });
+        } else {
+            swal({text: "El usuario no existe.", icon: "success", type: "success"}).then(function(){});
+        }
+    });
+}
 function verUsuario(idUsuario) {
     var idUser = idUsuario;
     $.post("view/scripts/verUsuario.php", {id: idUser}, function(datos){
         $("#resultadoBusqueda").html(datos);
     });
-    console.log(idUser);
 };
 function mostrar2(id) {
     console.log(id);
@@ -210,7 +244,7 @@ function mostrar(id) {
                                                 <button class="btn btn-danger" data-toggle="modal" data-target="#eliminarUsuario" onclick="deshabilitarUsuario(<?php echo $row['id'];?>)"><i class="fas fa-trash"></i></button>
                                             <?php }
                                         } else {
-                                            if ($idTipoUsuario['id_tipo_usuario'] == 6 || $idTipoUsuario['id_tipo_usuario'] == 7) { ?>
+                                            if ($idTipoUsuario['id_tipo_usuario'] == 6 || $idTipoUsuario['id_tipo_usuario'] == 7 || $idTipoUsuario['id_tipo_usuario'] == 8) { echo $idTipoUsuario['id_tipo_usuario']; ?>
                                                 <button type="button" disabled class="btn btn-primary" data-toggle="modal" data-target="#editarUsuario" value="<?php echo $row['id']; ?>" onclick="editarUsuario(<?php echo $row['id']; ?>)"><i class="fas fa-edit"></i></button>
                                                 <button disabled class="btn btn-danger" data-toggle="modal" data-target="#eliminarUsuario" onclick="deshabilitarUsuario(<?php echo $row['id']; ?>)"><i class="fas fa-trash"></i></button>
                                             <?php } else{ ?>
@@ -274,9 +308,9 @@ function mostrar(id) {
                                 </form>
                             </td>
                         </tr>
-                        <tr id="dni">
+                        <tr>
                             <td>DNI (sin letra): </td>
-                            <td><input type="text" name="dni" id="dni" maxlength="8" required/></td>
+                            <td><input type="text" name="dni" id="dni" maxlength="8" required/> <button type="button" class="btn btn-primary" onclick="buscarUsuario()"><i class="fas fa-search"></i></button></td>
                         </tr>
                         <tr id="nombre">
                             <td>Nombre: </td>
