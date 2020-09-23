@@ -41,7 +41,8 @@
             <?php $consultaEnfermedades = mysqli_query($con, "SELECT distinct U.* 
                                                                     FROM usuario U
                                                                     inner join usuario_enfermedad UE
-                                                                    on UE.id_usuario= U.id;"); ?>
+                                                                    on UE.id_usuario= U.id 
+                                                                    ORDER BY apellidos;"); ?>
             <div class="table-responsive">
                 <div class="jumbotron">
                     <table class="table table-dark table-bordered table-striped" id="enfermedades">
